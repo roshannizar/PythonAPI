@@ -13,14 +13,17 @@ default_app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-number = auth.create_user(email='user@example.com',
-                          email_verified=False,
-                          phone_number='+94771914959',
-                          password='secretPassword',
-                          display_name='John Doe',
-                          photo_url='http://www.example.com/12345678/photo.png',
-                          disabled=False)
-print(number)
+
+@app.route('/v1/signup', methods=['POST'])
+def login():
+    number = auth.create_user(email='roshannizar@gmail.com',
+                              email_verified=False,
+                              phone_number='+94771914959',
+                              password='123456',
+                              display_name='Roshan Nizar',
+                              photo_url='http://www.example.com/12345678/photo.png',
+                              disabled=False)
+    print(number)
 
 
 # add data to  collection
