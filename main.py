@@ -13,7 +13,7 @@ db = firestore.client()
 
 
 # # add data to  collection
-@app.route('/create', methods=['POST'])
+@app.route('/v1/create', methods=['POST'])
 def create():
     doc_ref = db.collection('testing').add({
         'reply': 'Here we go!'
@@ -22,7 +22,7 @@ def create():
 
 
 # update data
-@app.route('/update', methods=['PUT'])
+@app.route('/v1/update', methods=['PUT'])
 def update():
     db.collection('testing').document("GUJfBrmLDq4ul2WzwReg").update({
         'reply': 'Vola'
@@ -30,7 +30,7 @@ def update():
 
 
 # delete data
-@app.route('/delete', methods=["DELETE"])
+@app.route('/v1/delete', methods=["DELETE"])
 def delete():
     db.collection('testing').document("RFMkEQkAoFWsTTz350YR").delete()
 
