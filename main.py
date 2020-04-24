@@ -14,6 +14,7 @@ default_app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
+# signup API
 @app.route('/v1/signup', methods=['POST'])
 def login():
     number = auth.create_user(email='roshannizar@gmail.com',
