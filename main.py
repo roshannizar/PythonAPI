@@ -2,7 +2,7 @@ import flask
 import firebase_admin
 import google
 
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, auth
 
 # flask initialization
 app = flask.Flask(__name__)
@@ -12,6 +12,15 @@ cred = credentials.Certificate("serviceAccountKey.json")
 default_app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+
+number = auth.create_user(email='user@example.com',
+                          email_verified=False,
+                          phone_number='+94771914959',
+                          password='secretPassword',
+                          display_name='John Doe',
+                          photo_url='http://www.example.com/12345678/photo.png',
+                          disabled=False)
+print(number)
 
 
 # add data to  collection
