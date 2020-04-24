@@ -1,6 +1,10 @@
+import flask
 import firebase_admin
 import google
+
 from firebase_admin import credentials, firestore
+
+app = flask.Flask(__name__)
 
 cred = credentials.Certificate("serviceAccountKey.json")
 default_app = firebase_admin.initialize_app(cred)
@@ -8,24 +12,39 @@ default_app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-# add data to  collection
-doc_ref = db.collection('testing').add({
-    'reply': 'Santa'
-})
+# # add data to  collection
+@app.route('/create', methods=['POST'])
+def create():
+    doc_ref = db.collection('testing').add({
+        'reply': 'Here we go!'
+    })
+    print(doc_ref)
+
 
 # update data
-db.collection('testing').document("GUJfBrmLDq4ul2WzwReg").update({
-    'reply': 'Vola'
-})
+@app.route('/update', methods=['PUT'])
+def update():
+    db.collection('testing').document("GUJfBrmLDq4ul2WzwReg").update({
+        'reply': 'Vola'
+    })
+
 
 # delete data
-db.collection('testing').document("RFMkEQkAoFWsTTz350YR").delete()
+@app.route('/delete', methods=["DELETE"])
+def delete():
+    db.collection('testing').document("RFMkEQkAoFWsTTz350YR").delete()
+
 
 # get data
-try:
-    docs = db.collection('testing').stream()
-    for doc in docs:
-        print(format(doc.to_dict()))
+@app.route('/', methods=['GET'])
+def getData():
+    try:
+        docs = db.collection('testing').stream()
+        for doc in docs:
+            print(format(doc.to_dict()))
 
-except google.cloud.exceptions.NotFound:
-    print('No Doc Found!')
+    except google.cloud.exceptions.NotFound:
+        print('No Doc Found!')
+
+
+app.run()
