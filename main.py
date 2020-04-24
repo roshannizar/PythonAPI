@@ -4,15 +4,17 @@ import google
 
 from firebase_admin import credentials, firestore
 
+# flask initialization
 app = flask.Flask(__name__)
 
+# registering certificate
 cred = credentials.Certificate("serviceAccountKey.json")
 default_app = firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
 
-# # add data to  collection
+# add data to  collection
 @app.route('/v1/create', methods=['POST'])
 def create():
     doc_ref = db.collection('testing').add({
