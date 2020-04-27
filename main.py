@@ -55,7 +55,7 @@ def delete():
 
 
 # get data
-@app.route('/', methods=['GET'])
+@app.route('/')
 def getData():
     try:
         docs = db.collection('testing').stream()
