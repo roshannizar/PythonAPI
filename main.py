@@ -55,7 +55,7 @@ def delete():
 
 
 # get data
-@app.route('/')
+@app.route('/data', methods=['GET'])
 def getData():
     try:
         docs = db.collection('testing').stream()
@@ -66,9 +66,16 @@ def getData():
         response.status_code = 200
         return response
     except google.cloud.exceptions.NotFound:
-        response=jsonify(listDocs)
-        response.status_code=500
+        response = jsonify(listDocs)
+        response.status_code = 500
         return response
 
 
-app.run()
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
+
+
+if __name__ == '__main__':
+    # Threaded option to enable multiple instances for multiple user access support
+    app.run(threaded=True, port=5000)
