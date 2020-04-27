@@ -16,9 +16,23 @@ default_app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
+# sign in API
+@app.route('/v1/signin', methods=['POST'])
+def signIn():
+    try:
+        user = auth.get_user_by_phone_number("+94771914959")
+        response = jsonify(user.uid)
+        response.status_code = 200
+        return response
+    except google.cloud.exceptions.NotFound:
+        response = ''
+        response.status_code = 500
+        return response
+
+
 # signup API
 @app.route('/v1/signup', methods=['POST'])
-def login():
+def signUp():
     number = auth.create_user(email='roshannizar@gmail.com',
                               email_verified=False,
                               phone_number='+94771914959',
