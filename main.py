@@ -5,6 +5,8 @@ import google
 from firebase_admin import credentials, firestore, auth
 
 # flask initialization
+from flask import request, jsonify, json
+
 app = flask.Flask(__name__)
 
 # registering certificate
@@ -30,10 +32,12 @@ def login():
 # add data to  collection
 @app.route('/v1/create', methods=['POST'])
 def create():
-    doc_ref = db.collection('testing').add({
-        'reply': 'Here we go!'
-    })
-    print(doc_ref)
+    data = request.form
+    print(data)
+    # doc_ref = db.collection('testing').add({
+    #     'reply': 'Here we go!'
+    # })
+    # print(doc_ref)
 
 
 # update data
@@ -55,9 +59,12 @@ def delete():
 def getData():
     try:
         docs = db.collection('testing').stream()
+        listDocs = []
         for doc in docs:
-            print(format(doc.to_dict()))
-
+            listDocs.append(doc.to_dict())
+        response = jsonify(listDocs)
+        response.status_code = 200
+        return response
     except google.cloud.exceptions.NotFound:
         print('No Doc Found!')
 
