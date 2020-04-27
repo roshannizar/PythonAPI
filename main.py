@@ -66,7 +66,7 @@ def getData():
         response.status_code = 200
         return response
     except google.cloud.exceptions.NotFound:
-        response = jsonify(listDocs)
+        response = jsonify('{no values}')
         response.status_code = 500
         return response
 
