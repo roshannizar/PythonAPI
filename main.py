@@ -2,10 +2,11 @@ import flask
 import firebase_admin
 import google
 
+from services import auth_service
 from firebase_admin import credentials, firestore, auth
 
 # flask initialization
-from flask import request, jsonify, json
+from flask import request, jsonify
 
 app = flask.Flask(__name__)
 
@@ -20,22 +21,7 @@ db = firestore.client()
 @app.route('/v1/signin', methods=['POST'])
 def signIn():
     try:
-        data = request.form
-        user = auth.get_user_by_phone_number(data['phone_number'])
-
-        profile_data = db.collection('profile').document(user.uid).get()
-
-        password = profile_data.to_dict()
-
-        if password['password'] == data['password']:
-            response = jsonify(user.uid)
-            response.status_code = 200
-            return response
-        else:
-            response = jsonify('{Invalid Credentials}')
-            response.status_code = 404
-            return response
-
+        return auth_service.signin(request.form, db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Invalid credentials, Please try again}')
         response.status_code = 404
