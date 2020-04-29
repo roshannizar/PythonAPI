@@ -21,7 +21,7 @@ db = firestore.client()
 @app.route('/v1/signin', methods=['POST'])
 def signIn():
     try:
-        return auth_service.signin(request.form, db)
+        return auth_service.signIn(request.form, db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Invalid credentials, Please try again}')
         response.status_code = 404

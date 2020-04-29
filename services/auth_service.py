@@ -2,7 +2,8 @@ from firebase_admin import auth
 from flask import jsonify
 
 
-def signin(data, db):
+# sign in method
+def signIn(data, db):
     user = auth.get_user_by_phone_number(data['phone_number'])
 
     profile_data = db.collection('profile').document(user.uid).get()
