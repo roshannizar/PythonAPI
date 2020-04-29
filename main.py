@@ -20,12 +20,28 @@ db = firestore.client()
 @app.route('/v1/signin', methods=['POST'])
 def signIn():
     try:
-        user = auth.get_user_by_phone_number("+94771914959")
-        response = jsonify(user.uid)
-        response.status_code = 200
-        return response
+        data = request.form
+        user = auth.get_user_by_phone_number(data['phone_number'])
+
+        profile_data = db.collection('profile').document(user.uid).get()
+
+        password = profile_data.to_dict()
+
+        if password['password'] == data['password']:
+            response = jsonify(user.uid)
+            response.status_code = 200
+            return response
+        else:
+            response = jsonify('{Invalid Credentials}')
+            response.status_code = 404
+            return response
+
     except google.cloud.exceptions.NotFound:
-        response = ''
+        response = jsonify('{Invalid credentials, Please try again}')
+        response.status_code = 404
+        return response
+    except google.cloud.exceptions.InternalServerError:
+        response = jsonify('{Popped out an error, please contact the administrator}')
         response.status_code = 500
         return response
 
@@ -33,21 +49,40 @@ def signIn():
 # signup API
 @app.route('/v1/signup', methods=['POST'])
 def signUp():
-    number = auth.create_user(email='roshannizar@gmail.com',
-                              email_verified=False,
-                              phone_number='+94771914959',
-                              password='123456',
-                              display_name='Roshan Nizar',
-                              photo_url='http://www.example.com/12345678/photo.png',
-                              disabled=False)
-    print(number)
+    data = request.form
+    try:
+        number = auth.create_user(phone_number=data['phone_number']).uid
+
+        db.collection('profile').document(number).set({
+            'firstName': data['first_name'],
+            'lastName': data['last_name'],
+            'email': data['email'],
+            'phoneNumber': data['phone_number'],
+            'password': data['password'],
+            'uid': number,
+            'profile_url': data['profile_url']
+        })
+
+        response = jsonify('{Account created successfully}')
+        response.status_code = 200
+        return response
+
+    except google.cloud.exceptions.NotFound:
+        response = jsonify('{Bad Request}')
+        response.status_code = 404
+        return response
+    except google.cloud.exceptions.InternalServerError:
+        response = jsonify('{Error occurred while signing you up}')
+        response.status_code = 500
+        return response
 
 
 # add data to  collection
 @app.route('/v1/create', methods=['POST'])
 def create():
     data = request.form
-    print(data)
+    print(data['name'])
+    return data['name']
     # doc_ref = db.collection('testing').add({
     #     'reply': 'Here we go!'
     # })
