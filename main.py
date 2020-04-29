@@ -35,24 +35,8 @@ def signIn():
 # signup API
 @app.route('/v1/signup', methods=['POST'])
 def signUp():
-    data = request.form
     try:
-        number = auth.create_user(phone_number=data['phone_number']).uid
-
-        db.collection('profile').document(number).set({
-            'firstName': data['first_name'],
-            'lastName': data['last_name'],
-            'email': data['email'],
-            'phoneNumber': data['phone_number'],
-            'password': data['password'],
-            'uid': number,
-            'profile_url': data['profile_url']
-        })
-
-        response = jsonify('{Account created successfully}')
-        response.status_code = 200
-        return response
-
+        return auth_service.signUp(request.form,db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Bad Request}')
         response.status_code = 404

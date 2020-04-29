@@ -18,3 +18,22 @@ def signIn(data, db):
         response = jsonify('{Invalid Credentials}')
         response.status_code = 404
         return response
+
+
+# sign up method
+def signUp(data, db):
+    number = auth.create_user(phone_number=data['phone_number'])
+
+    db.collection('profile').document(number.uid).set({
+        'firstName': data['first_name'],
+        'lastName': data['last_name'],
+        'email': data['email'],
+        'phoneNumber': data['phone_number'],
+        'password': data['password'],
+        'uid': number,
+        'profile_url': data['profile_url']
+    })
+
+    response = jsonify('{Account created successfully}')
+    response.status_code = 200
+    return response
