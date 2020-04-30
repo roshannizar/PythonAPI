@@ -21,7 +21,7 @@ db = firestore.client()
 @app.route('/v1/signin', methods=['POST'])
 def signIn():
     try:
-        return auth_service.signIn(request.form, db)
+        return auth_service.signIn(request.json, db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Invalid credentials, Please try again}')
         response.status_code = 404
@@ -36,7 +36,7 @@ def signIn():
 @app.route('/v1/signup', methods=['POST'])
 def signUp():
     try:
-        return auth_service.signUp(request.form,db)
+        return auth_service.signUp(request.form, db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Bad Request}')
         response.status_code = 404
@@ -97,4 +97,4 @@ def index():
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+    app.run(threaded=True, port=5000, debug=True)
