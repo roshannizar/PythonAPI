@@ -2,7 +2,7 @@ import flask
 import firebase_admin
 import google
 
-from services import auth_service
+from services import auth_service, product_service
 from firebase_admin import credentials, firestore, auth
 
 # flask initialization
@@ -74,16 +74,10 @@ def delete():
 
 
 # get data
-@app.route('/data', methods=['GET'])
+@app.route('/v1', methods=['GET'])
 def getData():
     try:
-        docs = db.collection('testing').stream()
-        listDocs = []
-        for doc in docs:
-            listDocs.append(doc.to_dict())
-        response = jsonify(listDocs)
-        response.status_code = 200
-        return response
+        return product_service.getProducts(db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{no values}')
         response.status_code = 500
@@ -92,9 +86,9 @@ def getData():
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return "<h1>Welcome to our server !!</h1><h4>"'/data'" to get all the data</h4>"
 
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000, debug=True)
+    app.run(threaded=True, port=5000)
