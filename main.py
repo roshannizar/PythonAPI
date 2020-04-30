@@ -86,7 +86,7 @@ def getData():
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1><h4>"'/data'" to get all the data</h4>"
+    return "<h1>Welcome to our server !!</h1><h4>"'/v1'" to get all the data</h4>"
 
 
 if __name__ == '__main__':
