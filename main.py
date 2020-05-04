@@ -36,7 +36,7 @@ def signIn():
 @app.route('/v1/signup', methods=['POST'])
 def signUp():
     try:
-        return auth_service.signUp(request.form, db)
+        return auth_service.signUp(request.json, db)
     except google.cloud.exceptions.NotFound:
         response = jsonify('{Bad Request}')
         response.status_code = 404
