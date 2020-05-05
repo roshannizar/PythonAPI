@@ -50,9 +50,11 @@ def signUp():
 # add data to  collection
 @app.route('/v1/create', methods=['POST'])
 def create():
-    data = request.form
-    print(data['name'])
-    return data['name']
+    datas = request.json
+    print(datas["name"]["first_name"])
+    for data in datas["name"]["first_name"]:
+        print(data["name"])
+    return datas
     # doc_ref = db.collection('testing').add({
     #     'reply': 'Here we go!'
     # })
