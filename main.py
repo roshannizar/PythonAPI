@@ -54,6 +54,7 @@ def create():
     print(datas["name"]["first_name"])
     for data in datas["name"]["first_name"]:
         print(data["name"])
+        doc_ref = db.collection('testing').add(datas)
     return datas
     # doc_ref = db.collection('testing').add({
     #     'reply': 'Here we go!'
@@ -73,6 +74,17 @@ def update():
 @app.route('/v1/delete', methods=["DELETE"])
 def delete():
     db.collection('testing').document("RFMkEQkAoFWsTTz350YR").delete()
+
+
+# get product data
+@app.route('/v1/products', methods=['GET'])
+def getProducts():
+    try:
+        return product_service.getProducts(db)
+    except google.cloud.exceptions.InternalServerError:
+        response = jsonify('{no values}')
+        response.status_code = 500
+        return response
 
 
 # get data

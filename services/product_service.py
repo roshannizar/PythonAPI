@@ -2,7 +2,7 @@ from flask import jsonify
 
 
 def getProducts(db):
-    docs = db.collection('testing').stream()
+    docs = db.collection('products').stream()
     listDocs = []
     for doc in docs:
         listDocs.append(doc.to_dict())
